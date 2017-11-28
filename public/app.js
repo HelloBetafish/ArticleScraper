@@ -6,7 +6,7 @@ $.getJSON("/articles", function(data) {
     $("#articles").append("<br><img width='320' height='213' src='" + data[i].image + "' alt='Food Photo'>" + 
       "<p class='title'>" + data[i].title + "</p><p class='summary'>" + data[i].summary + "..." + "</p><p><a href='" + 
       data[i].link + "' target='_blank'>" + "View Article & Recipe</a><p class='addNote' data-id='" + 
-      data[i]._id + "'>Add a Note</p><hr/>"
+      data[i]._id + "'>Add a Comment</p><hr/>"
       );
   }
 });
@@ -34,7 +34,7 @@ $(document).on("click", ".addNote", function() {
       // A textarea to add a new note body
       $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
       // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+      $("#notes").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment</button>");
 
       // If there's a note in the article
       if (data.note) {
@@ -47,7 +47,7 @@ $(document).on("click", ".addNote", function() {
 });
 
 // When you click the savenote button
-$(document).on("click", "#savenote", function() {
+$(document).on("click", "#savecomment", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
 

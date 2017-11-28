@@ -40,6 +40,11 @@ mongoose.connect("mongodb://localhost/SKTest4", {
 });
 
 // Routes
+// Index Home Page which is also the login page
+app.get("/", function(req, res) {
+  // refers to .handlebars file that will be inserted into main.handlebars.
+  res.render("index");
+});
 
 // A GET route for scraping the echojs website
 app.get("/scrape", function(req, res) {
