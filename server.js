@@ -35,7 +35,7 @@ app.set("view engine", "handlebars");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/SKTest5", {
+mongoose.connect("mongodb://localhost/SKTest7", {
   useMongoClient: true
 });
 
@@ -165,6 +165,7 @@ app.delete("/comments/:id", function(req, res) {
 // Route for saving/updating an Article's associated Comment
 app.post("/articles/:id", function(req, res) {
   // TODO
+  console.log(req.body);
   // ====
   // Create a new comment and pass the req.body to the entry
   // save the new note that gets posted to the Notes collection
@@ -178,11 +179,12 @@ app.post("/articles/:id", function(req, res) {
     // If a Comment was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Comment
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-    return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comments: dbCommentCommnet._id } }, { new: true });
+    return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comments: dbComment._id } }, { new: true });
   })
   .then(function(dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
       res.json(dbArticle);
+      console.log("Comment succesfully added!");
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
