@@ -1,21 +1,21 @@
-// Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-  for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
-    $("#articles").append("<br><img width='320' height='213' src='" + data[i].image + "' alt='Food Photo'>" + 
-      "<p class='title'>" + data[i].title + "</p><p class='summary'>" + data[i].summary + "..." + "</p><p><a href='" + 
-      data[i].link + "' target='_blank'>" + "View Article & Recipe</a><p class='addNote' data-id='" + 
-      data[i]._id + "'>Add a Comment</p><hr/>"
-      );
-  }
-});
+// // Grab the articles as a json
+// $.getJSON("/articles", function(data) {
+//   // For each one
+//   for (var i = 0; i < data.length; i++) {
+//     // Display the apropos information on the page
+//     $("#articles").append("<br><img width='320' height='213' src='" + data[i].image + "' alt='Food Photo'>" + 
+//       "<p class='title'>" + data[i].title + "</p><p class='summary'>" + data[i].summary + "..." + "</p><p><a href='" + 
+//       data[i].link + "' target='_blank'>" + "View Article & Recipe</a><p class='addComment' data-id='" + 
+//       data[i]._id + "'>Add a Comment</p><hr/>"
+//       );
+//   }
+// });
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", ".addNote", function() {
-  // Empty the notes from the note section
-  $("#notes").empty();
+$(document).on("click", ".addComment", function() {
+  // Empty the comments from the comment section
+  $("#comments").empty();
   // Save the id from the p tag
   var thisId = $(this).attr("data-id");
 
@@ -24,29 +24,32 @@ $(document).on("click", ".addNote", function() {
     method: "GET",
     url: "/articles/" + thisId
   })
-    // With that done, add the note information to the page
+    // With that done, add the comment information to the page
     .done(function(data) {
       console.log(data);
       // The title of the article
-      $("#notes").append("<h2>" + data.title + "</h2>");
+      $("#comments").append("<h2>" + data.title + "</h2>");
       // An input to enter a new title
-      $("#notes").append("<input id='titleinput' name='title' >");
-      // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-      // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment</button>");
+      $("#comments").append("<input id='titleinput' name='title' >");
+      // A textarea to add a new comment body
+      $("#comments").append("<textarea id='bodyinput' name='body'></textarea>");
+      // A button to submit a new comment, with the id of the article saved to it
+      $("#comments").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment</button>");
 
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
-      }
-    });
-});
+      // If there's a comment in the article
+      if (data.comments) {
+        for (var i = 0; i < data.comments.length; i++) {
+    // Display the comments information on the page
+          $("comments").append("<div class='card w-50'><div class='card-block'><h3 class='card-title'>" +
+            data.comments[i].title + "</h3><p class='card-text'>" + data.comments[i].body + "</p>" +
+          "<p><small>Posted: "+ data.comments[i].userCreated + "</small></p>" +
+          "<a href='#' id='delete' class='btn btn-danger'>Delete</a></div></div>"
+          );
+        }
+      };
+  });
 
-// When you click the savenote button
+// When you click the savecomment button
 $(document).on("click", "#savecomment", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
@@ -67,10 +70,27 @@ $(document).on("click", "#savecomment", function() {
       // Log the response
       console.log(data);
       // Empty the notes section
-      $("#notes").empty();
+      location.reload();
     });
 
   // Also, remove the values entered in the input and textarea for note entry
   $("#titleinput").val("");
   $("#bodyinput").val("");
+});
+
+// When you click the scrape button
+$(document).on("click", "#scrape", function() {
+  // Run a GET request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "GET",
+    url: "/scrape"
+    data: {
+      articles
+    }
+  }).done(function() {
+      // Log the response
+      console.log("Scrape Complete");
+      // Empty the notes section
+      location.reload();
+    });
 });

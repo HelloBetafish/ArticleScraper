@@ -43,7 +43,20 @@ mongoose.connect("mongodb://localhost/SKTest4", {
 // Index Home Page which is also the login page
 app.get("/", function(req, res) {
   // refers to .handlebars file that will be inserted into main.handlebars.
-  res.render("index");
+  db.Article
+    .find({})
+    .then(function(dbArticle) {
+
+      var hbsObject = {
+        articles: dbArticle
+      };
+      console.log(hbsObject);
+
+      res.render("index", hbsObject);
+      // res.json(dbArticle);
+    .catch(function(err) {
+      res.json(err);
+    });
 });
 
 // A GET route for scraping the echojs website
@@ -108,7 +121,7 @@ app.get("/articles/:id", function(req, res) {
   // TODO
   db.Article
     .findOne({ _id: req.params.id})
-    .populate("note")
+    .populate("comments")
     .then(function(dbArticle) {
       res.json(dbArticle);
     })
@@ -117,25 +130,41 @@ app.get("/articles/:id", function(req, res) {
     });
   // ====
   // Finish the route so it finds one article using the req.params.id,
-  // and run the populate method with "note",
-  // then responds with the article with the note included
+  // and run the populate method with "comment",
+  // then responds with the article with the comment included
 });
 
-// Route for saving/updating an Article's associated Note
+app.get("/comments", function(req, res) {
+  // Find all Comments
+  db.Comment
+    .find({})
+    .then(function(dbComment) {
+      // If all Comments are successfully found, send them back to the client
+      res.json(dbComment);
+    })
+    .catch(function(err) {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
+});
+
+// Route for saving/updating an Article's associated Comment
 app.post("/articles/:id", function(req, res) {
   // TODO
   // ====
-  // Create a new note and pass the req.body to the entry
+  // Create a new comment and pass the req.body to the entry
   // save the new note that gets posted to the Notes collection
-  db.Note
+  db.Comment
   .create(req.body)
-  .then(function(dbNote) {
+  .then(function(dbComment) {
       // then find an article from the req.params.id
-  // and update it's "note" property with the _id of the new note
-    // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+  // then push the new Comment's _id to the User's `comments` array
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-    return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+    // If a Comment was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Comment
+      // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+      // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+    return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comments: dbCommentCommnet._id } }, { new: true });
   })
   .then(function(dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
