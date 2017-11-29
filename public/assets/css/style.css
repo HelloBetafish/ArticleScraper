@@ -6,12 +6,17 @@ body { background: url("/assets/images/pexels-photo-349610.jpeg") no-repeat cent
   background-size: cover;
 }
 
+h1 {
+  float: left;
+}
+
 p {
   font-size: 17px;
 }
 
-.title {
-  color: darkgreen;
+#scrape {
+  clear: right;
+  margin-left: 25px;
 }
 
 #wrapper {
@@ -52,28 +57,28 @@ textarea {
 }
 
 .title {
+  color: darkgreen
   font-weight: bold;
   font-size: 25px;
 }
 
+.link {
+  float: left;
+  font-weight: bold;
+  color: #6f1089;
+}
+
 .viewComments {
   font-weight: bold;
-  text-decoration: underline;
-  color: darkblue;
   margin-left: 40%;
+  color: #c48225;
 }
 
-a {
-  float: left;
-  font-weight: bold
+.delete {
+ float: right;
+ margin-right: 5px;
 }
 
-h1 {
-  float: left;
-}
-
-#scrape {
-  clear: right;
-  margin-left: 25px;
-}
+.card {
+  margin-bottom: 15px;
 }
