@@ -13,7 +13,7 @@
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", ".addComment", function() {
+$(document).on("click", ".viewComments", function() {
   // Empty the comments from the comment section
   $("#comments").empty();
   // Save the id from the p tag
@@ -34,7 +34,7 @@ $(document).on("click", ".addComment", function() {
       // A textarea to add a new comment body
       $("#comments").append("<textarea id='bodyinput' name='body'></textarea>");
       // A button to submit a new comment, with the id of the article saved to it
-      $("#comments").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment</button>");
+      $("#comments").append("<button data-id='" + data._id + "' id='saveComment'>Save Comment</button>");
 
       // If there's a comment in the article
       if (data.comments) {
@@ -43,14 +43,16 @@ $(document).on("click", ".addComment", function() {
           $("comments").append("<div class='card w-50'><div class='card-block'><h3 class='card-title'>" +
             data.comments[i].title + "</h3><p class='card-text'>" + data.comments[i].body + "</p>" +
           "<p><small>Posted: "+ data.comments[i].userCreated + "</small></p>" +
-          "<a href='#' id='delete' class='btn btn-danger'>Delete</a></div></div>"
+          "<a href='#' class='delete' data-commentID='" + data.comments[i]._id + 
+          "' class='btn btn-danger'>Delete</a></div></div>"
           );
         }
       };
   });
+});
 
-// When you click the savecomment button
-$(document).on("click", "#savecomment", function() {
+// When you click the saveComment button
+$(document).on("click", "#saveComment", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
 
@@ -84,9 +86,6 @@ $(document).on("click", "#scrape", function() {
   $.ajax({
     method: "GET",
     url: "/scrape"
-    data: {
-      articles
-    }
   }).done(function() {
       // Log the response
       console.log("Scrape Complete");
@@ -94,3 +93,17 @@ $(document).on("click", "#scrape", function() {
       location.reload();
     });
 });
+
+  $(".delete").on("click", function(event) {
+    var id = $(this).attr("data-commentID");
+
+    // Send the DELETE request.
+    $.ajax("/comments/" + id, {
+      type: "DELETE",
+      }).then(
+        function() {
+          console.log("deleted comment: ", id);
+        // Reload the page to get the updated list
+        location.reload();
+      });
+  });

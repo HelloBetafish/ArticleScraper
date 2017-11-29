@@ -1,14 +1,16 @@
 <div id="wrapper">
-  <h1>Smitten Kitchen Scraper</h1>
-  <h2><i>View the latest recipes from renowned cook and blogger Deb Perelman. Add your personal comments and view the comments of others.</i></h2>
-  <button id="scrape" type="button" class="btn btn-success">Scrape Articles</button>
+  <h1>Smitten Kitchen Scraper</h1>   
+  <button id="scrape" type="button" class="btn btn-success">Scrape Articles</button><hr>
+  <h3><i>View the latest recipes from renowned cook and blogger Deb Perelman. Add your personal comments and view the comments of others.</i></h3>
+
   <div id="articles">
   	{{#each articles}}
   		<br><img width='320' height='213' src='{{image}}' alt='Food Photo'>
       	<p class='title'>{{title}}</p>
       	<p class='summary'>{{summary}}...</p>
       	<p><a href='{{link}}'' target='_blank'>View Article & Recipe</a></p>
-      	<p class='addComment' data-id='{{_id}}''>View Comments</p><hr/>
+      	<p class='viewComments' data-id='{{_id}}''>View Comments</p><hr/>
+    {{/each}}
   </div>
   <div id="notes"></div>
 </div>

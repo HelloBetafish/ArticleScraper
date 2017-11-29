@@ -35,7 +35,7 @@ app.set("view engine", "handlebars");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/SKTest4", {
+mongoose.connect("mongodb://localhost/SKTest5", {
   useMongoClient: true
 });
 
@@ -53,6 +53,7 @@ app.get("/", function(req, res) {
       console.log(hbsObject);
 
       res.render("index", hbsObject);
+    })
       // res.json(dbArticle);
     .catch(function(err) {
       res.json(err);
@@ -134,20 +135,33 @@ app.get("/articles/:id", function(req, res) {
   // then responds with the article with the comment included
 });
 
-app.get("/comments", function(req, res) {
+// app.get("/comments", function(req, res) {
+//   // Find all Comments
+//   db.Comment
+//     .find({})
+//     .then(function(dbComment) {
+//       // If all Comments are successfully found, send them back to the client
+//       res.json(dbComment);
+//     })
+//     .catch(function(err) {
+//       // If an error occurs, send the error back to the client
+//       res.json(err);
+//     });
+// });
+
+app.delete("/comments/:id", function(req, res) {
   // Find all Comments
   db.Comment
-    .find({})
-    .then(function(dbComment) {
+    .findOneAndDelete({ _id: req.params.id})
+    .then(function() {
       // If all Comments are successfully found, send them back to the client
-      res.json(dbComment);
+      console.log("Comment successfully deleted!");
     })
     .catch(function(err) {
       // If an error occurs, send the error back to the client
       res.json(err);
     });
 });
-
 // Route for saving/updating an Article's associated Comment
 app.post("/articles/:id", function(req, res) {
   // TODO
